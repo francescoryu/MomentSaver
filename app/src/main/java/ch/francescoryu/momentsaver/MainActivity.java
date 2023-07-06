@@ -51,12 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         appDatabase = AppDatabase.getInstance(this);
         locationDao = appDatabase.locationDao();
 
-        LocationEntity location = new LocationEntity();
-        location.setLocationId(1);
-        location.setLocationName("My Location");
 
-        // Insert the location in the background using AsyncTask
-        new InsertLocationTask().execute(location);
 
         final Button button = findViewById(R.id.add_button);
 
@@ -94,6 +89,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         protected Void doInBackground(LocationEntity... locationEntities) {
             locationDao.insert(locationEntities[0]);
             return null;
+        }
+    }
+
+    private class RetrieveLocationsTask extends AsyncTask<Void, Void, List<LocationEntity>> {
+        @Override
+        protected List<LocationEntity> doInBackground(Void... voids) {
+            return locationDao.getAllLocations();
+        }
+
+        @Override
+        protected void onPostExecute(List<LocationEntity> locations) {
+            for (LocationEntity location : locations) {
+                // Print each location
+                System.out.println(location);
+            }
         }
     }
 
