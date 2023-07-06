@@ -1,6 +1,7 @@
 package ch.francescoryu.momentsaver;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -36,9 +37,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int REQUEST_CODE = 101;
     private Location currentLocation;
 
-    private AppDatabase appDatabase;
-    private LocationDao locationDao;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +45,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
-        appDatabase = AppDatabase.getInstance(this);
-        locationDao = appDatabase.locationDao();
-
-
 
         final Button button = findViewById(R.id.add_button);
 
@@ -76,35 +69,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (currentLocation != null && googleMap != null) {
                                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Selected");
                                 googleMap.addMarker(markerOptions);
+                                Intent secAct = new Intent(getApplicationContext(), AddActivity.class);
+                                secAct.setAction("ch.francescoryu.momentsaver.AddActivity");
+
+                                secAct.putExtra("laditude", currentLocation.getLatitude());
+                                secAct.putExtra("longitude", currentLocation.getLongitude());
+                                startActivity(secAct);
                             }
                         });
                     }
                 }
             }
         };
-    }
-
-    private class InsertLocationTask extends AsyncTask<LocationEntity, Void, Void> {
-        @Override
-        protected Void doInBackground(LocationEntity... locationEntities) {
-            locationDao.insert(locationEntities[0]);
-            return null;
-        }
-    }
-
-    private class RetrieveLocationsTask extends AsyncTask<Void, Void, List<LocationEntity>> {
-        @Override
-        protected List<LocationEntity> doInBackground(Void... voids) {
-            return locationDao.getAllLocations();
-        }
-
-        @Override
-        protected void onPostExecute(List<LocationEntity> locations) {
-            for (LocationEntity location : locations) {
-                // Print each location
-                System.out.println(location);
-            }
-        }
     }
 
     @Override
