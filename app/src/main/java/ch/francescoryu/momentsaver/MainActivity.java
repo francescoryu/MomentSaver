@@ -24,6 +24,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
@@ -34,15 +36,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int REQUEST_CODE = 101;
     private Location currentLocation;
 
+    private AppDatabase appDatabase;
+    private LocationDao locationDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        appDatabase = AppDatabase.getInstance(this);
+        locationDao = appDatabase.locationDao();
+
+        LocationEntity location = new LocationEntity();
+        location.setLocationId(1);
+        location.setLocationName("My Location");
+
+        // Insert the location in the background using AsyncTask
+        new InsertLocationTask().execute(location);
 
         final Button button = findViewById(R.id.add_button);
 
@@ -73,6 +87,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         };
+    }
+
+    private class InsertLocationTask extends AsyncTask<LocationEntity, Void, Void> {
+        @Override
+        protected Void doInBackground(LocationEntity... locationEntities) {
+            locationDao.insert(locationEntities[0]);
+            return null;
+        }
     }
 
     @Override
