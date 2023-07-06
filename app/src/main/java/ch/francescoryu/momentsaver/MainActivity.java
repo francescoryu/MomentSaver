@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationCallback locationCallback;
     private static final int REQUEST_CODE = 101;
     private Location currentLocation;
+    private AppDatabase appDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.getMapAsync(this);
 
         final Button button = findViewById(R.id.add_button);
+
+        appDatabase = AppDatabase.getInstance(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 Intent secAct = new Intent(getApplicationContext(), AddActivity.class);
                                 secAct.setAction("ch.francescoryu.momentsaver.AddActivity");
 
-                                secAct.putExtra("laditude", currentLocation.getLatitude());
+                                secAct.putExtra("latitude", currentLocation.getLatitude());
                                 secAct.putExtra("longitude", currentLocation.getLongitude());
                                 startActivity(secAct);
                             }
@@ -81,6 +84,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         };
+
+        AsyncTask.execute(() -> {
+            List<LocationEntity> locations = appDatabase.locationDao().getAll();
+            for (LocationEntity location : locations) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(location.getTitle());
+                runOnUiThread(() -> googleMap.addMarker(markerOptions));
+            }
+        });
     }
 
     @Override
