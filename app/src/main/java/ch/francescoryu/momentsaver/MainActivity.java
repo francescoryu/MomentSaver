@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int REQUEST_CODE = 101;
     private Location currentLocation;
     private AppDatabase appDatabase;
+    private LatLng latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +68,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Location location = locationResult.getLastLocation();
                     if (location != null) {
                         currentLocation = location;
-                        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                        latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                         button.setOnClickListener(v -> {
                             if (currentLocation != null && googleMap != null) {
+
                                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Selected");
                                 googleMap.addMarker(markerOptions);
                                 Intent secAct = new Intent(getApplicationContext(), AddActivity.class);
@@ -162,7 +164,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         enableMyLocation();
-        this.googleMap.getUiSettings().setZoomControlsEnabled(false);
+        if (latLng != null) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+        }
         this.googleMap.getUiSettings().setMapToolbarEnabled(false);
         addMarkersToMap();
     }

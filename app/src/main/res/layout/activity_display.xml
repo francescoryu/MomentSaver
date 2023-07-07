@@ -15,6 +15,7 @@
 
         <TextView
             android:id="@+id/title"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -26,6 +27,7 @@
 
         <TextView
             android:id="@+id/desc"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="388dp"
             android:layout_marginBottom="3dp"
@@ -40,6 +42,7 @@
 
         <TextView
             android:id="@+id/latitude"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
@@ -49,6 +52,7 @@
 
         <TextView
             android:id="@+id/longitude"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
