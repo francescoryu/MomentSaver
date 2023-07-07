@@ -17,10 +17,10 @@ import java.util.UUID;
 
 public class AddActivity extends AppCompatActivity {
 
-    String title;
-    String desc;
-    double laditudeDouble;
+    double latitudeDouble;
     double longitudeDouble;
+
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -32,10 +32,10 @@ public class AddActivity extends AppCompatActivity {
                 AppDatabase.class, "momentsaver").build();
 
         Bundle extras = getIntent().getExtras();
-        TextView laditude = findViewById(R.id.latitude);
+        TextView latitude = findViewById(R.id.latitude);
         TextView longitude = findViewById(R.id.longitude);
 
-        laditude.setText("Laditude: " + extras.getDouble("laditude"));
+        latitude.setText("Latitude: " + extras.getDouble("latitude"));
         longitude.setText("Longitude: " + extras.getDouble("longitude"));
 
         TextView titleTextView = findViewById(R.id.inputTitle);
@@ -43,17 +43,16 @@ public class AddActivity extends AppCompatActivity {
 
         //title = String.valueOf(titleTextView.getText());
         //desc = String.valueOf(descTextView.getText());
-        laditudeDouble = extras.getDouble("laditude");
+        latitudeDouble = extras.getDouble("latitude");
         longitudeDouble = extras.getDouble("longitude");
 
         Button saveButton = findViewById(R.id.save);
         saveButton.setOnClickListener(v -> {
             AsyncTask.execute(() -> {
                 LocationEntity location = new LocationEntity();
-                location.locationId = Integer.parseInt(UUID.randomUUID().toString());
                 location.title = String.valueOf(titleTextView.getText());
                 location.desc = String.valueOf(descTextView.getText());
-                location.latitude = laditudeDouble;
+                location.latitude = latitudeDouble;
                 location.longitude = longitudeDouble;
 
                 AppDatabase.getInstance(this).locationDao().insertAll(location);

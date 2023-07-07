@@ -66,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (location != null) {
                         currentLocation = location;
                         LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                         button.setOnClickListener(v -> {
                             if (currentLocation != null && googleMap != null) {
                                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Selected");
@@ -83,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
             }
+
         };
 
         AsyncTask.execute(() -> {
@@ -110,10 +109,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected void onDestroy() {
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
     }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {

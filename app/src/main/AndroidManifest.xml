@@ -17,10 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MomentSaver"
         tools:targetApi="31">
+        <activity
+            android:name=".DisplayActivity"
+            android:exported="false" />
+
         <service
             android:name=".MainService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".AddActivity"

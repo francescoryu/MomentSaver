@@ -4,10 +4,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.UUID;
+
 @Entity(tableName = "location")
 public class LocationEntity {
-    @PrimaryKey
-    public int locationId;
+    @PrimaryKey(autoGenerate = true)
+    public long locationId;
 
     @ColumnInfo(name = "title")
     public String title;
@@ -29,7 +31,7 @@ public class LocationEntity {
         return longitude;
     }
 
-    public int getLocationId() {
+    public long getLocationId() {
         return locationId;
     }
 
