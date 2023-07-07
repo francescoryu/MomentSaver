@@ -35,6 +35,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    //Tutorial: https://developer.android.com/codelabs/build-your-first-android-app#0
+
     private MapView mapView;
     private GoogleMap googleMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -159,6 +161,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 for (LocationEntity location : locations) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(location.getTitle());
+                    //ChatGPT
                     runOnUiThread(() -> {
                         Marker marker = googleMap.addMarker(markerOptions);
                         markers.put(marker.getId(), location);
@@ -185,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
-
+    //Chat GPT
     private void enableMyLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -195,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         googleMap.setMyLocationEnabled(true);
     }
-
+    //Chat GPT
     private void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
