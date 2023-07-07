@@ -30,7 +30,7 @@
             android:background="@color/white"
             android:ems="10"
             android:gravity="start|top"
-            android:hint="Description"
+            android:hint="@string/description"
             android:inputType="textMultiLine"
             android:padding="5dp" />
 
@@ -53,19 +53,19 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#FFFFFF"
-            android:textColor="@color/black"
-            android:text="@string/cancel" />
-
-        <Button
             android:id="@+id/save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#008CFF"
             android:text="@string/save" />
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="@color/black"
+            android:text="@string/cancel" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

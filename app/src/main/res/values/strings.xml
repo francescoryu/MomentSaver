@@ -47,4 +47,6 @@
     <string name="title_here">Title Here</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="description">Description</string>
+    <string name="back">Back</string>
 </resources>

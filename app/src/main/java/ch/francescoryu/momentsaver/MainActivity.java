@@ -23,8 +23,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -81,17 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
             }
-
         };
-
-        AsyncTask.execute(() -> {
-            List<LocationEntity> locations = appDatabase.locationDao().getAll();
-            for (LocationEntity location : locations) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(location.getTitle());
-                runOnUiThread(() -> googleMap.addMarker(markerOptions));
-            }
-        });
     }
 
     @Override
@@ -132,18 +124,47 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapView.onDestroy();
     }
 
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
 
+
+    private void addMarkersToMap() {
+        if (googleMap != null) {
+            HashMap<String, LocationEntity> markers = new HashMap<>();
+            AsyncTask.execute(() -> {
+                List<LocationEntity> locations = appDatabase.locationDao().getAll();
+                for (LocationEntity location : locations) {
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(location.getTitle());
+                    runOnUiThread(() -> {
+                        Marker marker = googleMap.addMarker(markerOptions);
+                        markers.put(marker.getId(), location);
+                    });
+                }
+            });
+            googleMap.setOnInfoWindowClickListener(marker -> {
+                LocationEntity location = markers.get(marker.getId());
+                Intent displayAct = new Intent(MainActivity.this, DisplayActivity.class);
+                displayAct.putExtra("title", location.getTitle());
+                displayAct.putExtra("desc", location.getDesc());
+                displayAct.putExtra("latitude", location.getLatitude());
+                displayAct.putExtra("longitude", location.getLongitude());
+                startActivity(displayAct);
+            });
+        }
+    }
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         enableMyLocation();
         this.googleMap.getUiSettings().setZoomControlsEnabled(false);
+        this.googleMap.getUiSettings().setMapToolbarEnabled(false);
+        addMarkersToMap();
     }
 
     private void enableMyLocation() {
@@ -166,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
-
     private void stopLocationUpdates() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
@@ -183,3 +203,5 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 }
+
+

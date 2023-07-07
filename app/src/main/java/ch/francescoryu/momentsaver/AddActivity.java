@@ -60,5 +60,11 @@ public class AddActivity extends AppCompatActivity {
                 startActivity(firstAct);
             });
         });
+
+        Button cancelButton = findViewById(R.id.back);
+        cancelButton.setOnClickListener(view -> {
+            Intent mainAct = new Intent(this, MainActivity.class);
+            startActivity(mainAct);
+        });
     }
 }
